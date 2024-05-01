@@ -17,7 +17,7 @@ LogisticRegression::~LogisticRegression() {
 }
 
 Eigen::MatrixXd LogisticRegression::construct_matrix() {
-    Eigen::MatrixXd X(get_dataset()->get_nbr_samples(), get_dataset()->get_dim());
+    Eigen::MatrixXd X(get_dataset()->get_nbr_samples(), get_dataset()->get_dim()+1);
     X.col(0).setOnes();
     
     for (int i = 0; i < get_dataset()->get_nbr_samples(); i++) {

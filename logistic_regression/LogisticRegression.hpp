@@ -6,7 +6,7 @@
 #include "Dataset.hpp"
 #include "Regression.hpp"
 
-class LinearRegression : public Regression {
+class LogisticRegression : public Regression {
 private:
     /**
       The logistic Regression coefficient.
@@ -18,24 +18,24 @@ public:
      @param dataset a pointer to a dataset
      @param m_col_regr the integer of the column index of Y
     */
-	LinearRegression(Dataset* dataset, Dataset* y);
+	LogisticRegression(Dataset* dataset, Dataset* y);
     /**
       The destructor (frees m_beta).
     */
-    ~LinearRegression();
+    ~LogisticRegression();
 
     /**
-        A function to construct from the data the matrix X needed by LinearRegression.
+        A function to construct from the data the matrix X needed by LogisticRegression.
     */
 	Eigen::MatrixXd construct_matrix();
 
     /**
-        A function to construct the vector y needed by LinearRegression.
+        A function to construct the vector y needed by LogisticRegression.
     */
     Eigen::VectorXd construct_y() ;
 
     /**
-        The setter method of the private attribute m_beta which is called by LinearRegression.
+        The setter method of the private attribute m_beta which is called by LogisticRegression.
         It should use the functions construct_matrix and construct_y.
     */
 	void set_coefficients();
