@@ -41,6 +41,7 @@ Eigen::VectorXd LogisticRegression::construct_y() {
 void LogisticRegression::set_coefficients() {
 	Eigen::MatrixXd X = construct_matrix();
 	Eigen::VectorXd y = construct_y();
+	
 	m_beta = new Eigen::VectorXd((X.transpose() * X).inverse() * X.transpose() * y);
 
 }
