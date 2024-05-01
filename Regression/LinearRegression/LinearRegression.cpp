@@ -51,7 +51,7 @@ Eigen::VectorXd LinearRegression::construct_y() {
 }
 
 void LinearRegression::set_coefficients() {
-	long d= m_dataset->get_dim() ;
+	long d= m_dataset->get_dim();
 	m_beta = new Eigen::VectorXd(d);
 	Eigen::MatrixXd X=construct_matrix();
 	Eigen::VectorXd y=construct_y();
