@@ -111,3 +111,7 @@ double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
 	}
 	return S;
 }
+
+double activation(double z) {
+  return 1/(1 + pow(e, (-1 * z)));
+}
