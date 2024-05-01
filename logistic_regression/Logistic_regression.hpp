@@ -22,25 +22,25 @@ public:
     /**
       The destructor (frees m_beta).
     */
-  ~LinearRegression();
+    ~LinearRegression();
 
-  /**
-    A function to construct from the data the matrix X needed by LinearRegression.
-  */
+    /**
+        A function to construct from the data the matrix X needed by LinearRegression.
+    */
 	Eigen::MatrixXd construct_matrix();
 
-  /**
-    A function to construct the vector y needed by LinearRegression.
-  */
-  Eigen::VectorXd construct_y() ;
+    /**
+        A function to construct the vector y needed by LinearRegression.
+    */
+    Eigen::VectorXd construct_y() ;
 
-  /**
-    The setter method of the private attribute m_beta which is called by LinearRegression.
-    It should use the functions construct_matrix and construct_y.
-  */
+    /**
+        The setter method of the private attribute m_beta which is called by LinearRegression.
+        It should use the functions construct_matrix and construct_y.
+    */
 	void set_coefficients();
   
-  /**
+    /**
       The getter method of the private attribute m_beta.
     */
 	const Eigen::VectorXd* get_coefficients() const;
@@ -49,7 +49,7 @@ public:
       Prints the contents of the private attribute m_beta.
     */
 	void show_coefficients() const;
-  /**
+    /**
       Prints the contents of the private attribute m_beta in a line.
     */
 	void print_raw_coefficients() const;
