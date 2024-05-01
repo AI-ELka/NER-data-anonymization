@@ -4,8 +4,10 @@
 #include "Dataset.hpp"
 #include "Regression.hpp"
 
-LogisticRegression::LogisticRegression(Dataset* X, Dataset* y) : Regression(X, y) {
+LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_rate, double epochs) : Regression(X, y) {
 	m_beta = NULL;
+	this->learning_rate = learning_rate;
+	this->epochs = epochs;
 	set_coefficients();
 }
 
@@ -42,7 +44,10 @@ void LogisticRegression::set_coefficients() {
 	Eigen::MatrixXd X = construct_matrix();
 	Eigen::VectorXd y = construct_y();
 	
-	m_beta = new Eigen::VectorXd((X.transpose() * X).inverse() * X.transpose() * y);
+	m_beta = new Eigen::VectorXd::Zero(X.cols());
+	for (int i = 0; i < epochs; i++) {
+		*m_beta -= learning_rate * gradient(X, y);
+	}
 
 }
 
@@ -60,7 +65,7 @@ void LogisticRegression::show_coefficients() const {
 		return;
 	}
 	
-	if (m_beta->size() != m_dataset->get_dim()) {  // ( beta_0 beta_1 ... beta_{d} )
+	if (m_beta->size() != X->get_dim()) {  // ( beta_0 beta_1 ... beta_{d} )
 		std::cout << "Warning, unexpected size of coefficients vector: " << m_beta->size() << std::endl;
 	}
 	
@@ -80,39 +85,44 @@ void LogisticRegression::print_raw_coefficients() const {
 	std::cout << " }" << std::endl;
 }
 
-void LogisticRegression::sum_of_squares(Dataset* dataset, double& ess, double& rss, double& tss) const {
-	assert(dataset->get_dim()==m_dataset->get_dim());
-	// TODO Exercise 4
+// void LogisticRegression::sum_of_squares(Dataset* dataset, double& ess, double& rss, double& tss) const {
+// 	assert(dataset->get_dim()==X->get_dim());
+// 	// TODO Exercise 4
 
-	ess = 0;
-	rss = 0;
-	tss = 0;
-	for (int i = 0; i < dataset->get_nbr_samples(); i++) {
-		double y = dataset->get_instance(i)[get_col_regr()];
-		Eigen::VectorXd x(dataset->get_dim() - 1);
-		for (int j = 0; j < dataset->get_dim(); j++) {
-			if (j < get_col_regr()) {
-				x(j) = dataset->get_instance(i)[j];
-			} else if (j > get_col_regr()) {
-				x(j - 1) = dataset->get_instance(i)[j];
-			}
-		}
-		double y_hat = estimate(x);
-		ess += (y_hat - y) * (y_hat - y);
-		rss += (y_hat - y) * (y_hat - y);
-		tss += (y - y_hat) * (y - y_hat);
-	}
+// 	ess = 0;
+// 	rss = 0;
+// 	tss = 0;
+// 	for (int i = 0; i < dataset->get_nbr_samples(); i++) {
+// 		double y = dataset->get_instance(i)[get_col_regr()];
+// 		Eigen::VectorXd x(dataset->get_dim() - 1);
+// 		for (int j = 0; j < dataset->get_dim(); j++) {
+// 			if (j < get_col_regr()) {
+// 				x(j) = dataset->get_instance(i)[j];
+// 			} else if (j > get_col_regr()) {
+// 				x(j - 1) = dataset->get_instance(i)[j];
+// 			}
+// 		}
+// 		double y_hat = estimate(x);
+// 		ess += (y_hat - y) * (y_hat - y);
+// 		rss += (y_hat - y) * (y_hat - y);
+// 		tss += (y - y_hat) * (y - y_hat);
+// 	}
 
-}
+// }
 
 double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
-	double S = get_coefficients()->operator()(0);
-	for (int i = 1; i < m_dataset->get_dim(); i++) {
-		S += get_coefficients()->operator()(i) * x(i - 1);
-	}
+	double S = sigmoid( *m_beta(0) + x.transpose() * m_beta->tail(m_beta->size() - 1) );
 	return S;
 }
 
-double activation(double z) {
-  return 1/(1 + pow(e, (-1 * z)));
+double sigmoid(const double x) {
+    return 1 / (1 + (-x).exp());
+}
+
+Eigen::VectorXd LogisticRegression::gradient(const Eigen::MatrixXd &X, const Eigen::VectorXd &y) {
+    Eigen::VectorXd grad = Eigen::VectorXd::Zero(X.cols());
+    for (int i = 0; i < X.rows(); i++) {
+        grad += (y(i) - sigmoid(X.row(i).dot(*m_beta))) * X.row(i);
+    }
+    return grad.transpose();
 }

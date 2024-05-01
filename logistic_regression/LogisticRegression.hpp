@@ -11,14 +11,16 @@ private:
     /**
       The logistic Regression coefficient.
     */
-	Eigen::VectorXd* m_beta;
+	  Eigen::VectorXd* m_beta;
+    double learning_rate;
+    long epochs;
 public:
     /**
       The linear Regression method fits a linear Regression coefficient to col_regr using the provided dataset. It calls set_coefficients under the hood.
      @param dataset a pointer to a dataset
      @param m_col_regr the integer of the column index of Y
     */
-	LogisticRegression(Dataset* dataset, Dataset* y);
+	  LogisticRegression(Dataset* dataset, Dataset* y, double learning_rate, long epochs);
     /**
       The destructor (frees m_beta).
     */
