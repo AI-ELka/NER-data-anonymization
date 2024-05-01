@@ -17,34 +17,28 @@ LogisticRegression::~LogisticRegression() {
 }
 
 Eigen::MatrixXd LogisticRegression::construct_matrix() {
-    Eigen::MatrixXd X(get_dataset()->get_nbr_samples(), get_dataset()->get_dim()+1);
+    Eigen::MatrixXd X(get_X()->get_nbr_samples(), get_X()->get_dim()+1);
     X.col(0).setOnes();
     
-    for (int i = 0; i < get_dataset()->get_nbr_samples(); i++) {
-        for (int j = 0; j < get_dataset()->get_dim(); j++) {
-            if (j < get_col_regr()) {
-                X(i, j + 1) = get_dataset()->get_instance(i)[j];
-            } else if (j > get_col_regr()) {
-				X(i, j) = get_dataset()->get_instance(i)[j];
-			}
+    for (int i = 0; i < get_X()->get_nbr_samples(); i++) {
+        for (int j = 0; j < get_X()->get_dim(); j++) {
+            X(i, j + 1) = get_X()->get_instance(i)[j];
         }
     }
     return X;
 }
 
 Eigen::VectorXd LogisticRegression::construct_y() {
-	// TODO Exercise 1
 
-	Eigen::VectorXd y(get_dataset()->get_nbr_samples());
-	for (int i = 0; i < get_dataset()->get_nbr_samples(); i++) {
-		y(i) = get_dataset()->get_instance(i)[get_col_regr()];
+	Eigen::VectorXd y(get_y()->get_nbr_samples());
+	for (int i = 0; i < get_y()->get_nbr_samples(); i++) {
+		y(i) = get_y()->get_instance(i)[0];
 	}
 	
 	return y;
 }
 
 void LogisticRegression::set_coefficients() {
-	// TODO Exercise 2
 	Eigen::MatrixXd X = construct_matrix();
 	Eigen::VectorXd y = construct_y();
 	m_beta = new Eigen::VectorXd((X.transpose() * X).inverse() * X.transpose() * y);
@@ -111,7 +105,6 @@ void LogisticRegression::sum_of_squares(Dataset* dataset, double& ess, double& r
 }
 
 double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
-	// TODO Exercise 3
 	double S = get_coefficients()->operator()(0);
 	for (int i = 1; i < m_dataset->get_dim(); i++) {
 		S += get_coefficients()->operator()(i) * x(i - 1);
