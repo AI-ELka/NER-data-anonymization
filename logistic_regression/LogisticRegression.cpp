@@ -44,7 +44,7 @@ void LogisticRegression::set_coefficients() {
 	Eigen::MatrixXd X = construct_matrix();
 	Eigen::VectorXd y = construct_y();
 	
-	m_beta = new Eigen::VectorXd::Zero(X.cols());
+	*m_beta = Eigen::VectorXd::Zero(X.cols());	
 	for (int i = 0; i < epochs; i++) {
 		*m_beta -= learning_rate * gradient(X, y);
 	}
@@ -111,12 +111,12 @@ void LogisticRegression::print_raw_coefficients() const {
 // }
 
 double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
-	double S = sigmoid( *m_beta(0) + x.transpose() * m_beta->tail(m_beta->size() - 1) );
+	double S = sigmoid( (*m_beta)(0) + x.transpose() * m_beta->tail(m_beta->size() - 1) );
 	return S;
 }
 
 double sigmoid(const double x) {
-    return 1 / (1 + (-x).exp());
+    return 1 / (1 + std::exp(-x));
 }
 
 Eigen::VectorXd LogisticRegression::gradient(const Eigen::MatrixXd &X, const Eigen::VectorXd &y) {
