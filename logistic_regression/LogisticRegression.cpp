@@ -1,7 +1,7 @@
 #include<iostream>
 #include<cassert>
 #include "LogisticRegression.hpp"
-#include "Dataset.hpp"
+#include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
 LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_rate, double epochs) : Regression(X, y) {
@@ -115,14 +115,14 @@ double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
 	return S;
 }
 
-double sigmoid(const double x) {
+double LogisticRegression::sigmoid(const double x) {
     return 1 / (1 + std::exp(-x));
 }
 
 Eigen::VectorXd LogisticRegression::gradient(const Eigen::MatrixXd &X, const Eigen::VectorXd &y) {
     Eigen::VectorXd grad = Eigen::VectorXd::Zero(X.cols());
     for (int i = 0; i < X.rows(); i++) {
-        grad += (y(i) - sigmoid(X.row(i).dot(*m_beta))) * X.row(i);
+        grad += ( y(i) - sigmoid( X.row(i).dot(*m_beta) ) ) * X.row(i);
     }
     return grad.transpose();
 }

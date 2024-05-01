@@ -30,7 +30,7 @@ void Dataset::show(bool verbose) const {
 	}
 }
 
-Dataset::Dataset(const char* file) {
+Dataset::Dataset(const char* file, const bool process_y) {
     m_nsamples = 0;
     m_dim = -1;
 
@@ -44,7 +44,7 @@ Dataset::Dataset(const char* file) {
     std::string line;
 
     // Read the file line by line
-    while (getline(fin, line)) {
+    while (getline(fin, line) && m_nsamples < 40) {
         std::vector<double> row;
         std::stringstream s(line);
         
@@ -53,10 +53,21 @@ Dataset::Dataset(const char* file) {
 
         // Parse each line by comma
         while (getline(s, word, ',')) {
-            // Convert the string to double and add it to the row vector
-            double val = std::stod(word); // Use std::stod for conversion
-            row.push_back(val);
-            ncols++;
+            if (process_y) {
+                if (word == "I-PER") {
+                    row.push_back(1);
+                    ncols++;
+                } else {
+                    row.push_back(0);
+                    ncols++;
+                
+                }
+            } else {
+                // Convert the string to double and add it to the row vector
+                double val = std::stod(word); // Use std::stod for conversion
+                row.push_back(val);
+                ncols++;
+            }
         }
 
         // Check if any columns were read
