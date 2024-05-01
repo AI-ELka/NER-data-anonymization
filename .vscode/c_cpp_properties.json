@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/home/mach/Downloads/eigen3/eigen-3.4.0"
             ],
             "defines": [],
             "cStandard": "c17",
