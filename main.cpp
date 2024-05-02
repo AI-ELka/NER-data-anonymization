@@ -1,16 +1,35 @@
 #include <iostream>
+#include <Eigen/Dense>
 #include "Dataset/Dataset.hpp"
 #include "logistic_regression/LogisticRegression.hpp"
-using namespace std;
 
 int main() {
-    Dataset X("data/representation.eng.train.csv");
-    cout << "Number of samples: " << X.get_nbr_samples() << endl;
-    cout << "Number of dimensions: " << X.get_dim() << endl;
+    // Load the dataset
+    Dataset X("data/representation.eng.testa.csv");  // Assuming the CSV is properly formatted for features
+    Dataset y("data/true_labels.eng.testa.csv", true); // Assuming second parameter 'true' signifies loading labels
 
-    Dataset y("data/true_labels.eng.train.csv", true);
-    cout << "Number of samples: " << y.get_nbr_samples() << endl;
-    cout << "Number of dimensions: " << y.get_dim() << endl;
+    // Parameters for logistic regression
+    double learningRate = 0.01;
+    long epochs = 1000;
+
+    // Create an instance of LogisticRegression
+    LogisticRegression logReg(&X, &y, learningRate, epochs);
+
+    // Fit the model
+    logReg.set_coefficients();
+
+    // Display coefficients
+    logReg.show_coefficients();
+
+    // Example of using the model to predict
+    // Here, we might take a random instance from `X` and estimate the output
+    const std::vector<double>& instance = X.get_instance(0);  // get the first instance
+    Eigen::VectorXd vec(instance.size());
+    for (size_t i = 0; i < instance.size(); ++i) {
+        vec(i) = instance[i];
+    }
+    double prediction = logReg.estimate(vec);
+    std::cout << "Predicted value for the first instance: " << prediction << std::endl;
 
     LogisticRegression logistic_regression(&X, &y, 0.01, 1000);
     logistic_regression.show_coefficients();

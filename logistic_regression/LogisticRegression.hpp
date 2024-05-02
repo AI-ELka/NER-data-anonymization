@@ -1,7 +1,13 @@
 #ifndef LINEAR_REGRESSION_HPP
 #define LINEAR_REGRESSION_HPP
+<<<<<<< HEAD
 #include <Eigen/Dense>
 #include <Eigen/Core>
+=======
+
+// #include <Eigen/Dense>
+// #include <Eigen/Core>
+>>>>>>> 3d134ca (add cmake)
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
@@ -64,7 +70,9 @@ class LogisticRegression : public Regression {
         */
         double estimate(const Eigen::VectorXd &x) const;
 
-        double sigmoid(const double x) const;
+        // double sigmoid(const double x);
+
+        double sigmoid(double x) const;
 
         /**
           The gradient method calculates the gradient of the loss function.
