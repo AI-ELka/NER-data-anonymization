@@ -8,8 +8,8 @@
 
 class Regression{
     protected:
-        Dataset* X;
-        Dataset* y;
+        Dataset* m_X;
+        Dataset* m_y;
     public:
         Regression(Dataset* X, Dataset* y);
         /**

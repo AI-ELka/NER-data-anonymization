@@ -9,6 +9,7 @@ LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_r
 	m_beta = NULL;
 	this->learning_rate = learning_rate;
 	this->epochs = epochs;
+    std::cout << "Setting coeffs" << std::endl;
 	set_coefficients();
 }
 
@@ -20,15 +21,14 @@ LogisticRegression::~LogisticRegression() {
 }
 
 Eigen::MatrixXd LogisticRegression::construct_matrix() {
-    Eigen::MatrixXd X(get_X()->get_nbr_samples(), get_X()->get_dim() + 1);
-    X.col(0).setOnes();
-
+    Eigen::MatrixXd Xones(get_X()->get_nbr_samples(), get_X()->get_dim() + 1);
+    Xones.col(0).setOnes();
     for (int i = 0; i < get_X()->get_nbr_samples(); i++) {
         for (int j = 0; j < get_X()->get_dim(); j++) {
-            X(i, j + 1) = get_X()->get_instance(i)[j];
+            Xones(i, j + 1) = get_X()->get_instance(i)[j];
         }
     }
-    return X;
+    return Xones;
 }
 
 Eigen::VectorXd LogisticRegression::construct_y() {
@@ -43,7 +43,8 @@ Eigen::VectorXd LogisticRegression::construct_y() {
 void LogisticRegression::set_coefficients() {
     Eigen::MatrixXd X = construct_matrix();
     Eigen::VectorXd y = construct_y();
-
+    std::cout << "X rows then columns " << X.rows()<< "  "<< X.cols() << std::endl;
+    std::cout << "y rows then columns " << y.rows()<< "  "<< y.cols() << std::endl;
     m_beta = new Eigen::VectorXd(X.cols());
     m_beta->setZero();
     for (int i = 0; i < epochs; i++) {
@@ -65,7 +66,7 @@ void LogisticRegression::show_coefficients() const {
         return;
     }
 
-    if (m_beta->size() != X->get_dim() + 1) {
+    if (m_beta->size() != m_X->get_dim() + 1) {
         std::cout << "Warning, unexpected size of coefficients vector: " << m_beta->size() << std::endl;
     }
 
