@@ -1,13 +1,7 @@
 #ifndef LINEAR_REGRESSION_HPP
 #define LINEAR_REGRESSION_HPP
-<<<<<<< HEAD
 #include <Eigen/Dense>
 #include <Eigen/Core>
-=======
-
-// #include <Eigen/Dense>
-// #include <Eigen/Core>
->>>>>>> 3d134ca (add cmake)
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
