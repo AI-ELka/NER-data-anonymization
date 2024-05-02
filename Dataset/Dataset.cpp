@@ -44,7 +44,7 @@ Dataset::Dataset(const char* file, const bool process_y) {
     std::string line;
 
     // Read the file line by line
-    while (getline(fin, line) && m_nsamples < 40) {
+    while (getline(fin, line) && m_nsamples < 10) {
         std::vector<double> row;
         std::stringstream s(line);
         

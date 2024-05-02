@@ -13,6 +13,6 @@ int main() {
     cout << "Number of dimensions: " << y.get_dim() << endl;
 
     LogisticRegression logistic_regression(&X, &y, 0.01, 1000);
-    //logistic_regression.show_coefficients();
+    logistic_regression.show_coefficients();
     return 0;
 }
