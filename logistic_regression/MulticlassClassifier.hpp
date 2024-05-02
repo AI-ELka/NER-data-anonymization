@@ -4,21 +4,28 @@
 #include <Eigen/Core>
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
+#include <map>
+#include <vector>
+#include <string>
+
+using namespace std;
+
 
 class MulticlassClassifier : public Regression {
     private:
-        /**
-          The multiclass classification coefficients.
-        */
-        Eigen::matrixXd* m_beta;
-        double learning_rate;
-        long epochs;
+          /**
+            The multiclass classification coefficients.
+          */
+          Eigen::MatrixXd* m_beta;
+          double learning_rate;
+          long epochs;
+          map<string, int> map_labels;
     public:
         /**
         @param X a pointer to features
         @param y a pointer to labels
         */
-        MulticlassClassifier(Dataset* X, Dataset* y, double learning_rate, long epochs);
+        MulticlassClassifier(Dataset* X, Dataset* y, double learning_rate, long epochs, vector<string> labels);
         /**
           The destructor (frees m_beta).
         */
@@ -32,7 +39,7 @@ class MulticlassClassifier : public Regression {
         /**
             A function to construct the vector y needed by LogisticRegression.
         */
-        Eigen::VectorXd construct_y();
+        Eigen::VectorXd construct_y(int j);
 
         /**
             The setter method of the private attribute m_beta which is called by LogisticRegression.
@@ -72,7 +79,8 @@ class MulticlassClassifier : public Regression {
             @param X the matrix of the dataset.
             @param y the vector of the labels.
         */
-        Eigen::VectorXd gradient(const Eigen::MatrixXd & X, const Eigen::VectorXd & y);
+        Eigen::VectorXd gradient(const Eigen::MatrixXd & X, const Eigen::VectorXd & y, const Eigen::VectorXd & beta) const;
+        double accuracy(const Dataset & X, const Dataset & y) const;
 };
 
 #endif

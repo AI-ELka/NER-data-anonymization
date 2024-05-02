@@ -9,7 +9,7 @@
 class Dataset {
     public:
 
-        Dataset(const char* file, bool process_y = false);
+        Dataset(const char* file, bool process_y = false, bool multiclass = false);
 
         ~Dataset();
             

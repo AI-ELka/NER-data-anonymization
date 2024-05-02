@@ -30,7 +30,7 @@ void Dataset::show(bool verbose) const {
 	}
 }
 
-Dataset::Dataset(const char* file, const bool process_y) {
+Dataset::Dataset(const char* file, const bool process_y, const bool multiclass) {
     m_nsamples = 0;
     m_dim = -1;
 
@@ -53,20 +53,60 @@ Dataset::Dataset(const char* file, const bool process_y) {
 
         // Parse each line by comma
         while (getline(s, word, ',')) {
-            if (process_y) {
+            if (multiclass) {
                 if (word == "I-PER") {
                     row.push_back(1);
-                    ncols++;
-                } else {
                     row.push_back(0);
-                    ncols++;
-                
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(0);
+                    ncols += 5;
+                } else if (word == "O") {
+                    row.push_back(0);
+                    row.push_back(1);
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(0);
+                    ncols += 5;
+                } else if (word == "I-MISC") {
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(1);
+                    row.push_back(0);
+                    row.push_back(0);
+                    ncols += 5;
+                } else if (word == "I-LOC") {
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(1);
+                    row.push_back(0);
+                    ncols += 5;
+                } else if (word == "I-ORG") {
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(0);
+                    row.push_back(1);
+                    ncols += 5;
+                } else {
+                    std::cerr << "ERROR: Unknown class label" << std::endl;
+                    exit(-1);
                 }
             } else {
-                // Convert the string to double and add it to the row vector
-                double val = std::stod(word); // Use std::stod for conversion
-                row.push_back(val);
-                ncols++;
+                if (process_y) {
+                    if (word == "I-PER") {
+                        row.push_back(1);
+                        ncols++;
+                    } else {
+                        row.push_back(0);
+                        ncols++;
+                    }
+                } else {
+                    double val = std::stod(word);
+                    row.push_back(val);
+                    ncols++;
+                }
             }
         }
 
