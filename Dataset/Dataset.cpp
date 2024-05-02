@@ -44,7 +44,7 @@ Dataset::Dataset(const char* file, const bool process_y) {
     std::string line;
 
     // Read the file line by line
-    while (getline(fin, line) ) {
+    while ( getline(fin, line) ) {
         std::vector<double> row;
         std::stringstream s(line);
         
@@ -52,7 +52,7 @@ Dataset::Dataset(const char* file, const bool process_y) {
         std::string word;
 
         // Parse each line by comma
-        while (getline(s, word, ',') && m_nsamples < 100) {
+        while (getline(s, word, ',')) {
             if (process_y) {
                 if (word == "I-PER") {
                     row.push_back(1);

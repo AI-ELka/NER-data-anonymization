@@ -19,7 +19,7 @@ class LogisticRegression : public Regression {
         @param X a pointer to a dataset
         @param y the integer of the column index of Y
         */
-        LogisticRegression(Dataset* X, Dataset* y, double learning_rate, long epochs);
+        LogisticRegression(Dataset* X, Dataset* y, double lr, long m_epochs);
         /**
           The destructor (frees m_beta).
         */
@@ -73,7 +73,9 @@ class LogisticRegression : public Regression {
         @param X the matrix of the dataset.
         @param y the vector of the labels.
         */
-        Eigen::VectorXd gradient(const Eigen::MatrixXd & X, const Eigen::VectorXd & y);
+        Eigen::VectorXd gradient(const Eigen::MatrixXd & X, const Eigen::VectorXd & y, Eigen::VectorXd & beta) const;
+
+        double accuracy(const Dataset & X, const Dataset & y) const;
 };
 
 #endif //LINEAR_REGRESSION_HPP

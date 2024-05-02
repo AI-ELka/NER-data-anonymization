@@ -5,11 +5,12 @@
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
-LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_rate, long epochs) : Regression(X, y) {
+using namespace std;
+
+LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double lr, long m_epochs) : Regression(X, y) {
 	m_beta = NULL;
-	this->learning_rate = learning_rate;
-	this->epochs = epochs;
-    std::cout << "Setting coeffs" << std::endl;
+	learning_rate = lr;
+	epochs = m_epochs;
 	set_coefficients();
 }
 
@@ -28,6 +29,7 @@ Eigen::MatrixXd LogisticRegression::construct_matrix() {
             Xones(i, j + 1) = get_X()->get_instance(i)[j];
         }
     }
+    cout << "construnting matrix done " << endl;
     return Xones;
 }
 
@@ -36,25 +38,26 @@ Eigen::VectorXd LogisticRegression::construct_y() {
     for (int i = 0; i < get_y()->get_nbr_samples(); i++) {
         y(i) = get_y()->get_instance(i)[0];
     }
-
+    cout << "construnting y done " << endl;
     return y;
 }
 
 void LogisticRegression::set_coefficients() {
     Eigen::MatrixXd X = construct_matrix();
     Eigen::VectorXd y = construct_y();
-    std::cout << "X rows then columns " << X.rows()<< "  "<< X.cols() << std::endl;
-    std::cout << "y rows then columns " << y.rows()<< "  "<< y.cols() << std::endl;
+
     m_beta = new Eigen::VectorXd(X.cols());
+    cout << "Setting coeffs" << endl;
     m_beta->setZero();
+    cout << "Setting coeffs to zeros" << epochs << endl;
     for (int i = 0; i < epochs; i++) {
-        *m_beta -= learning_rate * gradient(X, y);
+        *m_beta += learning_rate * gradient(X, y, *m_beta);
     }
 }
 
 const Eigen::VectorXd* LogisticRegression::get_coefficients() const {
     if (!m_beta) {
-        std::cout << "Coefficients have not been allocated." << std::endl;
+        cout << "Coefficients have not been allocated." << endl;
         return nullptr;
     }
     return m_beta;
@@ -62,28 +65,28 @@ const Eigen::VectorXd* LogisticRegression::get_coefficients() const {
 
 void LogisticRegression::show_coefficients() const {
     if (!m_beta) {
-        std::cout << "Coefficients have not been allocated." << std::endl;
+        cout << "Coefficients have not been allocated." << endl;
         return;
     }
 
     if (m_beta->size() != m_X->get_dim() + 1) {
-        std::cout << "Warning, unexpected size of coefficients vector: " << m_beta->size() << std::endl;
+        cout << "Warning, unexpected size of coefficients vector: " << m_beta->size() << endl;
     }
 
-    std::cout << "beta = (";
+    cout << "beta = (";
     for (int i = 0; i < m_beta->size(); i++) {
-        std::cout << " " << (*m_beta)[i];
+        cout << " " << (*m_beta)[i];
     }
-    std::cout << " )" << std::endl;
+    cout << " )" << endl;
 }
 
 void LogisticRegression::print_raw_coefficients() const {
-    std::cout << "{ ";
+    cout << "{ ";
     for (int i = 0; i < m_beta->size() - 1; i++) {
-        std::cout << (*m_beta)[i] << ", ";
+        cout << (*m_beta)[i] << ", ";
     }
-    std::cout << (*m_beta)[m_beta->size() - 1];
-    std::cout << " }" << std::endl;
+    cout << (*m_beta)[m_beta->size() - 1];
+    cout << " }" << endl;
 }
 
 double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
@@ -91,14 +94,34 @@ double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
     return S;
 }
 
-double LogisticRegression::sigmoid( double x) const{
-    return 1 / (1 + std::exp(-x));
+double LogisticRegression::sigmoid(double x) const{
+    return 1 / (1 + exp(-x));
 }
 
-Eigen::VectorXd LogisticRegression::gradient(const Eigen::MatrixXd &X, const Eigen::VectorXd &y) {
+Eigen::VectorXd LogisticRegression::gradient(const Eigen::MatrixXd &X, const Eigen::VectorXd &y, Eigen::VectorXd &beta) const {
     Eigen::VectorXd grad = Eigen::VectorXd::Zero(X.cols());
     for (int i = 0; i < X.rows(); i++) {
-        grad += (y(i) - sigmoid(X.row(i).dot(*m_beta))) * X.row(i);
+        grad += ( y(i) - sigmoid(X.row(i).dot(beta)) ) * X.row(i);
     }
     return grad.transpose();
+}
+
+double LogisticRegression::accuracy(const Dataset & X_test, const Dataset & y_test) const {
+    long S = 0;
+    for (int i = 0; i < X_test.get_nbr_samples(); i++) {
+        const std::vector<double> instance = X_test.get_instance(i);
+        Eigen::VectorXd vec(instance.size());
+        
+        for (size_t i = 0; i < instance.size(); ++i) {
+            vec(i) = instance[i];
+        }
+
+        double prediction = estimate(vec);
+        if (prediction >= 0.5 && y_test.get_instance(i)[0] == 1) {
+            S++;
+        } else if (prediction < 0.5 && y_test.get_instance(i)[0] == 0) {
+            S++;
+        }
+    }
+    return S/(double)X_test.get_nbr_samples();
 }
