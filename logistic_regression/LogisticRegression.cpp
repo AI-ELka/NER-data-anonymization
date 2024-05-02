@@ -1,27 +1,15 @@
-<<<<<<< HEAD
-#include <iostream>
-#include <cassert>
-=======
 #include<iostream>
 #include<cassert>
 #include "../Dataset/Dataset.hpp"
->>>>>>> 3d134ca (add cmake)
 #include "LogisticRegression.hpp"
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
 LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_rate, long epochs) : Regression(X, y) {
-<<<<<<< HEAD
-    m_beta = nullptr;
-    this->learning_rate = learning_rate;
-    this->epochs = epochs;
-    set_coefficients();
-=======
 	m_beta = NULL;
 	this->learning_rate = learning_rate;
 	this->epochs = epochs;
 	set_coefficients();
->>>>>>> 3d134ca (add cmake)
 }
 
 LogisticRegression::~LogisticRegression() {
@@ -102,11 +90,7 @@ double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
     return S;
 }
 
-<<<<<<< HEAD
-double LogisticRegression::sigmoid(const double x) const {
-=======
 double LogisticRegression::sigmoid( double x) const{
->>>>>>> 3d134ca (add cmake)
     return 1 / (1 + std::exp(-x));
 }
 

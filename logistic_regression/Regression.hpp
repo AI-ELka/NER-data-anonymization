@@ -26,4 +26,4 @@ class Regression{
         Dataset* get_X() const;
   };
 
-#endif //REGRESSION_HPP
+  #endif //REGRESSION_HPP
