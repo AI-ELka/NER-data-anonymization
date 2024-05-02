@@ -1,0 +1,3 @@
+/home/mach/Desktop/info432/Data_anonymization/NER_Project/build/CMakeFiles/NER_Project.dir
+/home/mach/Desktop/info432/Data_anonymization/NER_Project/build/CMakeFiles/edit_cache.dir
+/home/mach/Desktop/info432/Data_anonymization/NER_Project/build/CMakeFiles/rebuild_cache.dir

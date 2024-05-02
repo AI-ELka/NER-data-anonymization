@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/NER_Project.dir/main.cpp.o CMakeFiles/NER_Project.dir/Dataset/Dataset.cpp.o CMakeFiles/NER_Project.dir/logistic_regression/LogisticRegression.cpp.o CMakeFiles/NER_Project.dir/logistic_regression/Regression.cpp.o -o NER_Project 
