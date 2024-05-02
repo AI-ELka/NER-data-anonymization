@@ -1,5 +1,5 @@
 #include "Regression.hpp"
-#include "./Dataset/Dataset.hpp"
+#include "../Dataset/Dataset.hpp"
 
 Regression::Regression(Dataset* X, Dataset* y) {
     X = X;

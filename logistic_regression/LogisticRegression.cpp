@@ -4,7 +4,7 @@
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
-LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_rate, double epochs) : Regression(X, y) {
+LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_rate, long epochs) : Regression(X, y) {
 	m_beta = NULL;
 	this->learning_rate = learning_rate;
 	this->epochs = epochs;
@@ -115,7 +115,7 @@ double LogisticRegression::estimate(const Eigen::VectorXd & x) const {
 	return S;
 }
 
-double LogisticRegression::sigmoid(const double x) {
+double LogisticRegression::sigmoid(const double x) const {
     return 1 / (1 + std::exp(-x));
 }
 

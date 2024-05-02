@@ -16,8 +16,8 @@ class LogisticRegression : public Regression {
     public:
         /**
           The linear Regression method fits a linear Regression coefficient to col_regr using the provided dataset. It calls set_coefficients under the hood.
-        @param dataset a pointer to a dataset
-        @param m_col_regr the integer of the column index of Y
+        @param X a pointer to a dataset
+        @param y the integer of the column index of Y
         */
         LogisticRegression(Dataset* X, Dataset* y, double learning_rate, long epochs);
         /**
