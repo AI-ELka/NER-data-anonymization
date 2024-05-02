@@ -1,81 +1,108 @@
-#ifndef LINEAR_REGRESSION_HPP
-#define LINEAR_REGRESSION_HPP
+#ifndef LOGISTIC_REGRESSION_HPP
+#define LOGISTIC_REGRESSION_HPP
+
 #include <Eigen/Dense>
 #include <Eigen/Core>
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
-class LogisticRegression : public Regression {
-    private:
-        /**
-          The logistic Regression coefficient.
-        */
-        Eigen::VectorXd* m_beta;
-        double learning_rate;
-        long epochs;
-    public:
-        /**
-          The linear Regression method fits a linear Regression coefficient to col_regr using the provided dataset. It calls set_coefficients under the hood.
-        @param X a pointer to a dataset
-        @param y the integer of the column index of Y
-        */
-        LogisticRegression(Dataset* X, Dataset* y, double lr, long m_epochs);
-        /**
-          The destructor (frees m_beta).
-        */
-        ~LogisticRegression();
+class LogisticRegression : public Regression
+{
+private:
+  /**
+    The logistic Regression vector of coefficients and learning hyperparameters.
+  */
+  Eigen::VectorXd *m_beta;
+  double learning_rate;
+  long epochs;
 
-        /**
-            A function to construct from the data the matrix X needed by LogisticRegression.
-        */
-        Eigen::MatrixXd construct_matrix();
+public:
+  /**
+    @param X a pointer to a dataset
+    @param y the integer of the column index of Y
+  */
+  LogisticRegression(Dataset *X, Dataset *y, double lr, long m_epochs);
+  
+  /**
+    The destructor (frees m_beta).
+  */
+  ~LogisticRegression();
 
-        /**
-            A function to construct the vector y needed by LogisticRegression.
-        */
-        Eigen::VectorXd construct_y();
+  /**
+    A function to construct from the data the matrix X needed by LogisticRegression.
+  */
+  Eigen::MatrixXd construct_matrix();
 
-        /**
-            The setter method of the private attribute m_beta which is called by LogisticRegression.
-            It should use the functions construct_matrix and construct_y.
-        */
-        void set_coefficients();
+  /**
+    A function to construct the vector y needed by LogisticRegression.
+  */
+  Eigen::VectorXd construct_y();
 
-        /**
-          The getter method of the private attribute m_beta.
-        */
-        const Eigen::VectorXd *get_coefficients() const;
+  /**
+    The setter method of the private attribute m_beta which is called by LogisticRegression.
+  */
+  void set_coefficients();
 
-        /**
-          Prints the contents of the private attribute m_beta.
-        */
-        void show_coefficients() const;
-        /**
-          Prints the contents of the private attribute m_beta in a line.
-        */
-        void print_raw_coefficients() const;
-        /**
-          The sum_of_squares method calculates the ESS, RSS and TSS that will be initialized, passed by reference and thereafter printed by test_linear.
-        */
-        //void sum_of_squares(Dataset *dataset, double &ess, double &rss, double &tss) const;
-        /**
-          The estimate method outputs the predicted Y for a given point x.
-        @param x the point for which to estimate Y.
-        */
-        double estimate(const Eigen::VectorXd &x) const;
+  /**
+    The getter method of the private attribute m_beta.
+  */
+  const Eigen::VectorXd *get_coefficients() const;
+  
+  /**
+    The estimate method outputs the predicted y for a given point x.
+    @param x the point for which to estimate y.
+  */
+  double estimate(const Eigen::VectorXd &x) const;
 
-        // double sigmoid(const double x);
+  /**
+    The sigmoid method calculates the sigmoid of a given value.
+    @param x the value for which to calculate the sigmoid.
+  */
+  double sigmoid(double x) const;
 
-        double sigmoid(double x) const;
+  /**
+    The gradient method calculates the gradient of the maximum likelihood function.
+    @param X the matrix of the dataset.
+    @param y the vector of the labels.
+    @param beta the vector of the coefficients.
+  */
+  Eigen::VectorXd gradient(const Eigen::MatrixXd &X, const Eigen::VectorXd &y, Eigen::VectorXd &beta) const;
 
-        /**
-          The gradient method calculates the gradient of the loss function.
-        @param X the matrix of the dataset.
-        @param y the vector of the labels.
-        */
-        Eigen::VectorXd gradient(const Eigen::MatrixXd & X, const Eigen::VectorXd & y, Eigen::VectorXd & beta) const;
+  /**
+    The sum_of_squares method calculates the ESS, RSS and TSS that will be initialized, passed by reference and thereafter printed by test_linear.
+    @param X the matrix of the dataset.
+    @param y the vector of the labels.
+    @param con_matrix the confusion matrix.
+  */
+  void confusion_matrix(const Dataset &X, const Dataset &y, Eigen::MatrixXd &con_matrix ) const;
 
-        double accuracy(const Dataset & X, const Dataset & y) const;
+  /**
+    The accuracy method calculates the accuracy of the model on a given dataset.
+    @param X the matrix of the features.
+    @param y the vector of the labels.
+  */
+  double accuracy(const Dataset &X, const Dataset &y) const;
+
+  /**
+    The double precision method calculates the double precision of the model on a given dataset.
+    @param X the matrix of the features.
+    @param y the vector of the labels.
+  */
+  double precision(const Dataset &X, const Dataset &y) const;
+
+  /**
+    The double recall method calculates the double recall of the model on a given dataset.
+    @param X the matrix of the features.
+    @param y the vector of the labels.
+  */
+  double recall(const Dataset &X, const Dataset &y) const;
+
+  /**
+    The double f1_score method calculates the double f1_score of the model on a given dataset.
+    @param X the matrix of the features.
+    @param y the vector of the labels.
+  */
+  double f1_score(const Dataset &X, const Dataset &y) const;
 };
 
-#endif //LINEAR_REGRESSION_HPP
+#endif

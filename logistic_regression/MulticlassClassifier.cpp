@@ -45,7 +45,7 @@ Eigen::MatrixXd MulticlassClassifier::construct_matrix() {
 }
 
 Eigen::VectorXd MulticlassClassifier::construct_y(int j) {
-    assert (j < get_y()->get_dim());
+    assert ( j < get_y()->get_dim() );
     
     const int num_samples = get_y()->get_nbr_samples();
     Eigen::VectorXd y_labels(num_samples);
@@ -83,25 +83,24 @@ Eigen::VectorXd MulticlassClassifier::gradient(const Eigen::MatrixXd &X, const E
 Eigen::VectorXd MulticlassClassifier::estimate(const Eigen::VectorXd & x) const {
     Eigen::VectorXd probas = Eigen::VectorXd(get_y()->get_dim());
     for (int i = 0; i < get_y()->get_dim(); i++) {
-        probas(i) = sigmoid((*m_beta).col(i)(0) + x.transpose() * m_beta->col(i).tail(m_beta->col(i).size() - 1));
+        probas(i) = sigmoid( (*m_beta).col(i)(0) + x.transpose() * m_beta->col(i).tail(m_beta->col(i).size() - 1) );
     }
     return probas;
 }
 
 double MulticlassClassifier::accuracy(const Dataset & X_test, const Dataset & y_test) const {
     long S = 0;
-
     for (int i = 0; i < X_test.get_nbr_samples(); i++) {
         Eigen::VectorXd votes = Eigen::VectorXd::Zero(get_y()->get_dim());
 
         const std::vector<double> instance = X_test.get_instance(i);
-        Eigen::VectorXd vec(instance.size());
         
+        Eigen::VectorXd vec(instance.size());
         for (size_t i = 0; i < instance.size(); ++i) {
             vec(i) = instance[i];
         }
-
         Eigen::VectorXd probas = estimate(vec);
+
         for (int i = 0; i < probas.size(); i++) {
             if ( probas(i) >= 0.5 ) {
                 votes(i) += 1;
@@ -114,45 +113,26 @@ double MulticlassClassifier::accuracy(const Dataset & X_test, const Dataset & y_
             }
         }
         
-        int prediction = votes.maxCoeff();
+        int prediction = 0;
+        for (int i = 1; i < votes.size(); i++) {
+            if (votes(i) > votes(prediction)) {
+                prediction = i;
+            }
+        }
+
         if ( y_test.get_instance(i)[prediction] == 1 ) {
             S++;
         }
 
     }
+    
     return S/(double)X_test.get_nbr_samples();
 }
 
-// const Eigen::VectorXd* MulticlassClassifier::get_coefficients() const {
-//     if (!m_beta) {
-//         std::cout << "Coefficients have not been allocated." << std::endl;
-//         return nullptr;
-//     }
-//     return m_beta;
-// }
-
-// void MulticlassClassifier::show_coefficients() const {
-//     if (!m_beta) {
-//         std::cout << "Coefficients have not been allocated." << std::endl;
-//         return;
-//     }
-
-//     if (m_beta->size() != m_X->get_dim() + 1) {
-//         std::cout << "Warning, unexpected size of coefficients vector: " << m_beta->size() << std::endl;
-//     }
-
-//     std::cout << "beta = (";
-//     for (int i = 0; i < m_beta->size(); i++) {
-//         std::cout << " " << (*m_beta)[i];
-//     }
-//     std::cout << " )" << std::endl;
-// }
-
-// void MulticlassClassifier::print_raw_coefficients() const {
-//     std::cout << "{ ";
-//     for (int i = 0; i < m_beta->size() - 1; i++) {
-//         std::cout << (*m_beta)[i] << ", ";
-//     }
-//     std::cout << (*m_beta)[m_beta->size() - 1];
-//     std::cout << " }" << std::endl;
-// }
+const Eigen::MatrixXd* MulticlassClassifier::get_coefficients() const {
+    if (!m_beta) {
+        std::cout << "Coefficients have not been allocated." << std::endl;
+        return nullptr;
+    }
+    return m_beta;
+}
