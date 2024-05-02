@@ -5,8 +5,8 @@
 
 int main() {
     // Load the dataset
-    Dataset X("data/representation.eng.testa.csv");  // Assuming the CSV is properly formatted for features
-    Dataset y("data/true_labels.eng.testa.csv", true); // Assuming second parameter 'true' signifies loading labels
+    Dataset X("/home/mach/Desktop/info432/Data_anonymization/NER_Project/data/representation.eng.testa.csv");  // Assuming the CSV is properly formatted for features
+    Dataset y("/home/mach/Desktop/info432/Data_anonymization/NER_Project/data/true_labels.eng.testa.csv", true); // Assuming second parameter 'true' signifies loading labels
 
     // Parameters for logistic regression
     double learningRate = 0.01;

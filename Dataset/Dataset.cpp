@@ -89,6 +89,7 @@ Dataset::Dataset(const char* file, const bool process_y) {
     }
     
     fin.close();
+    std::cout << "Loaded " << m_nsamples << " samples with " << m_dim << " dimensions." << std::endl;
 }
 
 const std::vector<double>& Dataset::get_instance(int i) const {
