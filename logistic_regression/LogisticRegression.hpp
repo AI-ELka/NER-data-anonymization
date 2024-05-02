@@ -74,6 +74,9 @@ class LogisticRegression : public Regression {
         @param y the vector of the labels.
         */
         Eigen::VectorXd gradient(const Eigen::MatrixXd & X, const Eigen::VectorXd & y);
+
+        double calculateAccuracy(const Eigen::MatrixXd &X, const Eigen::VectorXd &y);
+        double calculate_test_Accuracy(Dataset *X, Dataset *y);
 };
 
 #endif //LINEAR_REGRESSION_HPP

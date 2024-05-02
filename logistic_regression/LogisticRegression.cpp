@@ -5,6 +5,7 @@
 #include "../Dataset/Dataset.hpp"
 #include "Regression.hpp"
 
+
 LogisticRegression::LogisticRegression(Dataset* X, Dataset* y, double learning_rate, long epochs) : Regression(X, y) {
 	m_beta = NULL;
 	this->learning_rate = learning_rate;
@@ -101,4 +102,40 @@ Eigen::VectorXd LogisticRegression::gradient(const Eigen::MatrixXd &X, const Eig
         grad += (y(i) - sigmoid(X.row(i).dot(*m_beta))) * X.row(i);
     }
     return grad.transpose();
+
 }
+
+double LogisticRegression::calculateAccuracy(const Eigen::MatrixXd &X, const Eigen::VectorXd &y) {
+    int correctPredictions = 0;
+    for (int i = 0; i < X.size(); i++) {
+        Eigen::VectorXd instance = X.row(i);
+        double prediction = estimate(instance);
+        double actual = y.row(i)(0);  // assuming y is a Dataset of Eigen::VectorXd with one element
+        if ((prediction >= 0.5 && actual == 1.0) || (prediction < 0.5 && actual == 0.0)) {
+            correctPredictions++;
+        }
+    }
+    return static_cast<double>(correctPredictions) / X.size();
+}
+
+double LogisticRegression::calculate_test_Accuracy(Dataset* X, Dataset* y) {
+    int correctPredictions = 0;
+    Eigen::MatrixXd X_test = construct_matrix();
+    Eigen::VectorXd y_test = construct_y();
+    std::cout << "Xtest rows then columns " << X_test.rows()<< "  "<< X_test.cols() << std::endl;
+    std::cout << "ytest rows then columns " << y_test.rows()<< "  "<< y_test.cols() << std::endl;
+    // std::cout << "Actual: " << y_test << std::endl;
+    for (int i = 0; i < X_test.rows(); i++) {
+        Eigen::VectorXd instance = X_test.row(i);
+        double prediction = sigmoid(instance.transpose() * (*m_beta));
+        // std::cout << "Prediction: " << prediction << std::endl;
+
+        double actual = y_test.row(i)(0);  // assuming y is a Dataset of Eigen::VectorXd with one element
+        if ((prediction >= 0.5 && actual == 1.0) || (prediction < 0.5 && actual == 0.0)) {
+            correctPredictions++;
+        }
+    }
+    return (correctPredictions) / (double)X_test.rows();
+}
+
+
