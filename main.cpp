@@ -22,7 +22,9 @@ int main() {
         long m_epochs = 100;
 
         // Create an instance of LogisticRegression and fit the model.
+        std::cout << "\nFitting the model..." << std::endl;
         LogisticRegression logReg(&X_train, &y_train, lr, m_epochs);
+        std::cout << "Model fitted.\n" << std::endl;
 
         // Accuracy on the training set
         std::cout << "Accuracy on training set: " << logReg.accuracy(X_train, y_train) << std::endl;
@@ -33,6 +35,7 @@ int main() {
         // Accuracy on the test set a
         Dataset X_test_a("data/representation.eng.testa.csv");
         Dataset y_test_a("data/true_labels.eng.testa.csv", true);
+        std::cout << "\nEvaluating the model on the test set a..." << std::endl;
 
         std::cout << "Accuracy on test set a: " << logReg.accuracy(X_test_a, y_test_a) << std::endl;
         std::cout << "Precision on test set a: " << logReg.precision(X_test_a, y_test_a) << std::endl;
@@ -42,6 +45,7 @@ int main() {
         // Accuracy on the test set b
         Dataset X_test_b("data/representation.eng.testb.csv");
         Dataset y_test_b("data/true_labels.eng.testb.csv", true);
+        std::cout << "\nEvaluating the model on the test set b..." << std::endl;
 
         std::cout << "Accuracy on test set b: " << logReg.accuracy(X_test_b, y_test_b) << std::endl;
         std::cout << "Precision on test set b: " << logReg.precision(X_test_b, y_test_b) << std::endl;
@@ -51,8 +55,8 @@ int main() {
     else if (process == "multiclass") 
     {
         // Load the dataset
-        Dataset X_train("data/representation.eng.testa.csv");
-        Dataset y_train("data/true_labels.eng.testa.csv", false, true);
+        Dataset X_train("data/representation.eng.train.csv");
+        Dataset y_train("data/true_labels.eng.train.csv", false, true);
         
         // Parameters for logistic regression for multiclass classification
         double lr = 0.01;
@@ -62,13 +66,25 @@ int main() {
         std::vector<std::string> labels = {"I-PER", "O", "I-MISC", "I-LOC" "I-ORG"};
 
         // Create an instance of MulticlassClassifier and fit the model
+        std::cout << "\nFitting the model..." << std::endl;
         MulticlassClassifier classifier(&X_train, &y_train, lr, m_epochs, labels);
+        std::cout << "Model fitted.\n" << std::endl;
+
+        // Accuracy on the training set
+        std::cout << "Accuracy on training set: " << classifier.accuracy(X_train, y_train) << std::endl;
+        std::cout << "Precision on training set: " << classifier.precision(X_train, y_train) << std::endl;
+        std::cout << "Recall on training set: " << classifier.recall(X_train, y_train) << std::endl;
+        std::cout << "F1 score on training set: " << classifier.f1_score(X_train, y_train) << std::endl;
 
         // Accuracy on the test set a
+        std::cout << "\nEvaluating the model on the test set a..." << std::endl;
         Dataset X_test_a("data/representation.eng.testa.csv");
         Dataset y_test_a("data/true_labels.eng.testa.csv", false, true);
 
         std::cout << "Accuracy on test set a: " << classifier.accuracy(X_test_a, y_test_a) << std::endl;
+        std::cout << "Precision on test set a: " << classifier.precision(X_test_a, y_test_a) << std::endl;
+        std::cout << "Recall on test set a: " << classifier.recall(X_test_a, y_test_a) << std::endl;
+        std::cout << "F1 score on test set a: " << classifier.f1_score(X_test_a, y_test_a) << std::endl;
     } else {
         cout << "Invalid input !" << endl;
     }

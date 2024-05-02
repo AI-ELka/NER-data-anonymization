@@ -20,7 +20,7 @@ private:
   Eigen::MatrixXd *m_beta;
   double learning_rate;
   long epochs;
-  
+
   /*
     The mapping of the labels of the classes.
   */
@@ -35,7 +35,7 @@ public:
     @param labels the labels of the classes
   */
   MulticlassClassifier(Dataset *X, Dataset *y, double learning_rate, long epochs, vector<string> labels);
-  
+
   /*
     The destructor (frees m_beta).
   */
@@ -61,17 +61,12 @@ public:
   */
   const Eigen::MatrixXd *get_coefficients() const;
 
-  /*
-    The sum_of_squares method calculates the ESS, RSS and TSS.
-  */
-  void sum_of_squares(Dataset *X, Dataset *y, double &ess, double &rss, double &tss) const;
-  
   /**
     The estimate method outputs the predicted probabilities for one vs all classes for a given point x.
     @param x the point for which to estimate Y.
   */
   Eigen::VectorXd estimate(const Eigen::VectorXd &x) const;
-  
+
   /**
     The sigmoid method calculates the sigmoid of a given value.
     @param x the value for which to calculate the sigmoid.
@@ -85,7 +80,14 @@ public:
       @param beta the vector of the coefficients.
   */
   Eigen::VectorXd gradient(const Eigen::MatrixXd &X, const Eigen::VectorXd &y, const Eigen::VectorXd &beta) const;
-  
+
+  /**
+      Compute the confusion matrix of the model.
+      @param X the matrix of the dataset.
+      @param y the vector of the labels.
+  */
+  void confusion_matrix(const Dataset &X, const Dataset &y, Eigen::MatrixXd &con_matrix) const;
+
   /**
     The accuracy method calculates the accuracy of the model.
     @param X the matrix of the dataset.
@@ -93,6 +95,26 @@ public:
   */
   double accuracy(const Dataset &X, const Dataset &y) const;
 
+  /**
+    The precision method calculates the precision of the model.
+    @param X the matrix of the dataset.
+    @param y the vector of the labels.
+  */
+  double precision(const Dataset &X, const Dataset &y) const;
+
+  /**
+    The recall method calculates the recall of the model.
+    @param X the matrix of the dataset.
+    @param y the vector of the labels.
+  */
+  double recall(const Dataset &X, const Dataset &y) const;
+
+  /**
+    The f1_score method calculates the f1_score of the model.
+    @param X the matrix of the dataset.
+    @param y the vector of the labels.
+  */
+  double f1_score(const Dataset &X, const Dataset &y) const;
 };
 
 #endif

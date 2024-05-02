@@ -88,12 +88,22 @@ Eigen::VectorXd MulticlassClassifier::estimate(const Eigen::VectorXd & x) const 
     return probas;
 }
 
-double MulticlassClassifier::accuracy(const Dataset & X_test, const Dataset & y_test) const {
-    long S = 0;
-    for (int i = 0; i < X_test.get_nbr_samples(); i++) {
+const Eigen::MatrixXd* MulticlassClassifier::get_coefficients() const {
+    if (!m_beta) {
+        std::cout << "Coefficients have not been allocated." << std::endl;
+        return nullptr;
+    }
+    return m_beta;
+}
+
+void MulticlassClassifier::confusion_matrix(const Dataset &X, const Dataset &y, Eigen::MatrixXd &con_matrix) const {
+    con_matrix = Eigen::MatrixXd::Zero(y.get_dim(), y.get_dim());
+    
+    for (int i = 0; i < X.get_nbr_samples(); i++) {
+        
         Eigen::VectorXd votes = Eigen::VectorXd::Zero(get_y()->get_dim());
 
-        const std::vector<double> instance = X_test.get_instance(i);
+        const std::vector<double> instance = X.get_instance(i);
         
         Eigen::VectorXd vec(instance.size());
         for (size_t i = 0; i < instance.size(); ++i) {
@@ -120,19 +130,63 @@ double MulticlassClassifier::accuracy(const Dataset & X_test, const Dataset & y_
             }
         }
 
-        if ( y_test.get_instance(i)[prediction] == 1 ) {
-            S++;
+        for (int k = 0; k < y.get_dim(); k++) {
+            if ( y.get_instance(i)[k] == 1 ) {
+                con_matrix(k, prediction) += 1;
+            }
         }
-
     }
-    
-    return S/(double)X_test.get_nbr_samples();
 }
 
-const Eigen::MatrixXd* MulticlassClassifier::get_coefficients() const {
-    if (!m_beta) {
-        std::cout << "Coefficients have not been allocated." << std::endl;
-        return nullptr;
+double MulticlassClassifier::accuracy(const Dataset &X, const Dataset &y) const {
+    Eigen::MatrixXd con_matrix;
+    confusion_matrix(X, y, con_matrix);
+    double accuracy = 0;
+    for (int i = 0; i < con_matrix.rows(); i++) {
+        accuracy += con_matrix(i, i);
     }
-    return m_beta;
+    accuracy /= (double)X.get_nbr_samples();
+    return accuracy;
+}
+
+double MulticlassClassifier::precision(const Dataset &X, const Dataset &y) const {
+    Eigen::MatrixXd con_matrix;
+    confusion_matrix(X, y, con_matrix);
+    double precision = 0;
+    for (int i = 0; i < con_matrix.rows(); i++) {
+        double true_positives = con_matrix(i, i);
+        double false_positives = 0;
+        for (int j = 0; j < con_matrix.rows(); j++) {
+            if (j != i) {
+                false_positives += con_matrix(j, i);
+            }
+        }
+        precision += true_positives / (true_positives + false_positives);
+    }
+    precision /= (double)con_matrix.rows();
+    return precision;
+}
+
+double MulticlassClassifier::recall(const Dataset &X, const Dataset &y) const {
+    Eigen::MatrixXd con_matrix;
+    confusion_matrix(X, y, con_matrix);
+    double recall = 0;
+    for (int i = 0; i < con_matrix.rows(); i++) {
+        double true_positives = con_matrix(i, i);
+        double false_negatives = 0;
+        for (int j = 0; j < con_matrix.rows(); j++) {
+            if (j != i) {
+                false_negatives += con_matrix(i, j);
+            }
+        }
+        recall += true_positives / (true_positives + false_negatives);
+    }
+    recall /= (double)con_matrix.rows();
+    return recall;
+}
+
+double MulticlassClassifier::f1_score(const Dataset &X, const Dataset &y) const {
+    double precision_score = precision(X, y);
+    double recall_score = recall(X, y);
+    return 2 * (precision_score * recall_score) / (precision_score + recall_score);
 }
