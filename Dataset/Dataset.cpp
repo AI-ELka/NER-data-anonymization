@@ -54,45 +54,8 @@ Dataset::Dataset(const char* file, const bool process_y, const bool multiclass) 
         // Parse each line by comma
         while (getline(s, word, ',')) {
             if (multiclass) {
-                if (word == "I-PER") {
-                    row.push_back(1);
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(0);
-                    ncols += 5;
-                } else if (word == "O") {
-                    row.push_back(0);
-                    row.push_back(1);
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(0);
-                    ncols += 5;
-                } else if (word == "I-MISC") {
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(1);
-                    row.push_back(0);
-                    row.push_back(0);
-                    ncols += 5;
-                } else if (word == "I-LOC") {
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(1);
-                    row.push_back(0);
-                    ncols += 5;
-                } else if (word == "I-ORG") {
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(0);
-                    row.push_back(1);
-                    ncols += 5;
-                } else {
-                    std::cerr << "ERROR: Unknown class label" << std::endl;
-                    exit(-1);
-                }
+                row=encodeLabel(word);
+                ncols += row.size();
             } else {
                 if (process_y) {
                     if (word == "I-PER") {
@@ -134,4 +97,30 @@ Dataset::Dataset(const char* file, const bool process_y, const bool multiclass) 
 
 const std::vector<double>& Dataset::get_instance(int i) const {
 	return m_instances[i];
+}
+
+std::vector<double> Dataset::encodeLabel(const std::string& label) {
+    if (label == "O") {
+        return {1, 0, 0, 0, 0, 0, 0, 0, 0}; //one-hot encoding
+    } else if (label == "B-PER") {
+        return {0, 1, 0, 0, 0, 0, 0, 0, 0}; 
+    } else if (label == "I-PER") {
+        return {0, 0, 1, 0, 0, 0, 0, 0, 0}; 
+    } else if (label == "B-ORG") {
+        return {0, 0, 0, 1, 0, 0, 0, 0, 0}; 
+    } else if (label == "I-ORG") {
+        return {0, 0, 0, 0, 1, 0, 0, 0, 0}; 
+    } else if (label == "B-LOC") {
+        return {0, 0, 0, 0, 0, 1, 0, 0, 0}; 
+    } else if (label == "I-LOC") {
+        return {0, 0, 0, 0, 0, 0, 1, 0, 0}; 
+    } else if (label == "B-MISC") {
+        return {0, 0, 0, 0, 0, 0, 0, 1, 0}; 
+    } else if (label == "I-MISC") {
+        return {0, 0, 0, 0, 0, 0, 0, 0, 1}; 
+    } else {
+        std::cout << label << std::endl;
+        std::cerr << "ERROR: Unknown class label " << label << std::endl;
+        exit(-1);
+    }
 }

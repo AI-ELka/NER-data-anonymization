@@ -21,6 +21,8 @@ class Dataset {
 
     	int get_dim() const;
 
+        std::vector<double> encodeLabel(const std::string& label);
+
     private:
 
 		int m_dim;
