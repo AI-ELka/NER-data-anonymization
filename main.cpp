@@ -54,20 +54,20 @@ int main() {
     } 
     else if (process == "multiclass") 
     {
+
+        // Encode the labels
+        std::vector<std::string> labels = {"O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-MISC", "I-MISC"};
         // Load the dataset
         Dataset X_train("data/representation.eng.train.csv");
-        Dataset y_train("data/true_labels.eng.train.csv", false, true);
+        Dataset y_train("data/true_labels.eng.train.csv", false, true, labels);
         
         // Parameters for logistic regression for multiclass classification
         double lr = 0.01;
         long m_epochs = 100;
 
-        // Encode the labels
-        std::vector<std::string> labels = {"I-PER", "O", "I-MISC", "I-LOC" "I-ORG"};
-
         // Create an instance of MulticlassClassifier and fit the model
         std::cout << "\nFitting the model..." << std::endl;
-        MulticlassClassifier classifier(&X_train, &y_train, lr, m_epochs, labels);
+        MulticlassClassifier classifier(&X_train, &y_train, lr, m_epochs);
         std::cout << "Model fitted.\n" << std::endl;
 
         // Accuracy on the training set
@@ -79,7 +79,7 @@ int main() {
         // Accuracy on the test set a
         std::cout << "\nEvaluating the model on the test set a..." << std::endl;
         Dataset X_test_a("data/representation.eng.testa.csv");
-        Dataset y_test_a("data/true_labels.eng.testa.csv", false, true);
+        Dataset y_test_a("data/true_labels.eng.testa.csv", false, true,labels);
 
         std::cout << "Accuracy on test set a: " << classifier.accuracy(X_test_a, y_test_a) << std::endl;
         std::cout << "Precision on test set a: " << classifier.precision(X_test_a, y_test_a) << std::endl;

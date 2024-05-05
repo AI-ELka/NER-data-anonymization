@@ -11,6 +11,14 @@
 
 using namespace std;
 
+MulticlassClassifier::MulticlassClassifier(Dataset* X, Dataset* y, double lr, long n_epoch) : Regression(X, y) {
+	m_beta = nullptr;
+	learning_rate = lr;
+	epochs = n_epoch;
+    map_labels=y->get_labels();
+	set_coefficients();
+}//use this one 
+
 MulticlassClassifier::MulticlassClassifier(Dataset* X, Dataset* y, double lr, long n_epoch, vector<string> labels) : Regression(X, y) {
 	m_beta = nullptr;
 	learning_rate = lr;
@@ -18,8 +26,13 @@ MulticlassClassifier::MulticlassClassifier(Dataset* X, Dataset* y, double lr, lo
     for (size_t i = 0; i < labels.size(); i++) {
         map_labels[labels[i]] = i;
     }
+    if (map_labels != y->get_labels()) {
+        std::cerr << "map_labels and y labels are not equal" << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
 	set_coefficients();
 }
+
 
 MulticlassClassifier::~MulticlassClassifier() {
     if (m_beta != nullptr) {

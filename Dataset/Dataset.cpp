@@ -13,6 +13,10 @@ int Dataset::get_dim() const {
 	return m_dim;
 }
 
+std::map<std::string, int> Dataset::get_labels() const {
+    return labelIndexMap;
+}
+
 Dataset::~Dataset() {
 }
 
@@ -30,7 +34,18 @@ void Dataset::show(bool verbose) const {
 	}
 }
 
-Dataset::Dataset(const char* file, const bool process_y, const bool multiclass) {
+
+Dataset::Dataset(const char* file, const bool process_y, const bool multiclass, const std::optional<std::vector<std::string>>& labels) {
+    if(process_y == multiclass) {
+        std::cerr << "ERROR: process_y and multiclass cannot be the same \n Choose true flase (and then optional labels) if you want binary classification .\n For a mutliclass , choose false true and give the labels you gave in the dataset.\n Thank you!!" << std::endl;
+        exit(-1);
+    }
+    if (labels.has_value()) {
+        std::cout << "Labels provided" << std::endl;
+        for (size_t i = 0; i < labels.value().size(); i++) {
+            labelIndexMap[labels.value()[i]] = i;
+        }
+    }
     m_nsamples = 0;
     m_dim = -1;
 
@@ -99,25 +114,37 @@ const std::vector<double>& Dataset::get_instance(int i) const {
 	return m_instances[i];
 }
 
+// std::vector<double> Dataset::encodeLabel(const std::string& label) {
+//     if (label == "O") {
+//         return {1, 0, 0, 0, 0, 0, 0, 0, 0}; //one-hot encoding
+//     } else if (label == "B-PER") {
+//         return {0, 1, 0, 0, 0, 0, 0, 0, 0}; 
+//     } else if (label == "I-PER") {
+//         return {0, 0, 1, 0, 0, 0, 0, 0, 0}; 
+//     } else if (label == "B-ORG") {
+//         return {0, 0, 0, 1, 0, 0, 0, 0, 0}; 
+//     } else if (label == "I-ORG") {
+//         return {0, 0, 0, 0, 1, 0, 0, 0, 0}; 
+//     } else if (label == "B-LOC") {
+//         return {0, 0, 0, 0, 0, 1, 0, 0, 0}; 
+//     } else if (label == "I-LOC") {
+//         return {0, 0, 0, 0, 0, 0, 1, 0, 0}; 
+//     } else if (label == "B-MISC") {
+//         return {0, 0, 0, 0, 0, 0, 0, 1, 0}; 
+//     } else if (label == "I-MISC") {
+//         return {0, 0, 0, 0, 0, 0, 0, 0, 1}; 
+//     } else {
+//         std::cout << label << std::endl;
+//         std::cerr << "ERROR: Unknown class label " << label << std::endl;
+//         exit(-1);
+//     }
+// }
+
 std::vector<double> Dataset::encodeLabel(const std::string& label) {
-    if (label == "O") {
-        return {1, 0, 0, 0, 0, 0, 0, 0, 0}; //one-hot encoding
-    } else if (label == "B-PER") {
-        return {0, 1, 0, 0, 0, 0, 0, 0, 0}; 
-    } else if (label == "I-PER") {
-        return {0, 0, 1, 0, 0, 0, 0, 0, 0}; 
-    } else if (label == "B-ORG") {
-        return {0, 0, 0, 1, 0, 0, 0, 0, 0}; 
-    } else if (label == "I-ORG") {
-        return {0, 0, 0, 0, 1, 0, 0, 0, 0}; 
-    } else if (label == "B-LOC") {
-        return {0, 0, 0, 0, 0, 1, 0, 0, 0}; 
-    } else if (label == "I-LOC") {
-        return {0, 0, 0, 0, 0, 0, 1, 0, 0}; 
-    } else if (label == "B-MISC") {
-        return {0, 0, 0, 0, 0, 0, 0, 1, 0}; 
-    } else if (label == "I-MISC") {
-        return {0, 0, 0, 0, 0, 0, 0, 0, 1}; 
+    if (labelIndexMap.find(label) != labelIndexMap.end()) {
+        std::vector<double> oneHot(labelIndexMap.size(), 0.0);
+        oneHot[labelIndexMap[label]] = 1.0;  // Set the corresponding index to 1
+        return oneHot;
     } else {
         std::cout << label << std::endl;
         std::cerr << "ERROR: Unknown class label " << label << std::endl;
