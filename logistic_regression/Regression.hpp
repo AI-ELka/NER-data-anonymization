@@ -15,11 +15,7 @@ class Regression{
         /**
           The estimate method is virtual: it will depend on the Regression being of class Linear or Knn.
         */
-<<<<<<< HEAD
         //virtual double estimate(const Eigen::VectorXd & x) const = 0;
-=======
-        virtual double estimate(const Eigen::VectorXd & x) const = 0;
->>>>>>> origin/main
         /**
           The getter for m_col_regr
         */

@@ -17,17 +17,8 @@ add_executable(NER_Project main.cpp
     Dataset/Dataset.cpp
     logistic_regression/LogisticRegression.cpp
     logistic_regression/Regression.cpp
-<<<<<<< HEAD
     logistic_regression/MulticlassClassifier.cpp
-=======
->>>>>>> origin/main
 )
 # If you have other directories with header files, include them as well
 target_include_directories(NER_Project PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-<<<<<<< HEAD
-=======
-
-# # Link Eigen
-# target_link_libraries(logistic_regression ${EIGEN3_LIBRARIES})
->>>>>>> origin/main

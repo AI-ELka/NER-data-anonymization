@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Named Entity Recognition Project
 
 This project is a Named Entity Recognition (NER) system implemented in C++ using logistic regression and multiclass classification.
@@ -38,6 +37,3 @@ When you run the program, you will be prompted to enter 'binary' for binary clas
 ## License
 
 This project is licensed under the terms of the MIT license. See the `LICENSE` file for details.
-=======
-jfjfjffkf
->>>>>>> origin/main

@@ -1,14 +1,6 @@
-<<<<<<< HEAD
 urllib3
 numpy
 tqdm
 scikit-learn
 torch
 transformers
-=======
-scikit-learn
-numpy
-tqdm
-transformers
-
->>>>>>> origin/main
