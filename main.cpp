@@ -1,0 +1,139 @@
+#include <iostream>
+#include <Eigen/Dense>
+#include "Dataset/Dataset.hpp"
+<<<<<<< HEAD
+#include <vector>
+#include "logistic_regression/LogisticRegression.hpp"
+#include "logistic_regression/MulticlassClassifier.hpp"
+#include <string>
+
+int main() {
+    string process;
+    cout << "Enter 'binary' for binary classification or 'multiclass' for multiclass classification: ";
+    cin >> process;
+    
+    if (process == "binary")
+    {
+        // Load the dataset
+        Dataset X_train("data/representation.eng.train.csv");
+        Dataset y_train("data/true_labels.eng.train.csv", true, false);
+        
+        // Parameters for logistic regression
+        double lr = 0.001;
+        long m_epochs = 100;
+
+        // Create an instance of LogisticRegression and fit the model.
+        std::cout << "\nFitting the model..." << std::endl;
+        LogisticRegression logReg(&X_train, &y_train, lr, m_epochs);
+        std::cout << "Model fitted.\n" << std::endl;
+
+        // Accuracy on the training set
+        std::cout << "Accuracy on training set: " << logReg.accuracy(X_train, y_train) << std::endl;
+        std::cout << "Precision on training set: " << logReg.precision(X_train, y_train) << std::endl;
+        std::cout << "Recall on training set: " << logReg.recall(X_train, y_train) << std::endl;
+        std::cout << "F1 score on training set: " << logReg.f1_score(X_train, y_train) << std::endl;
+        
+        // Accuracy on the test set a
+        Dataset X_test_a("data/representation.eng.testa.csv");
+        Dataset y_test_a("data/true_labels.eng.testa.csv", true);
+        std::cout << "\nEvaluating the model on the test set a..." << std::endl;
+
+        std::cout << "Accuracy on test set a: " << logReg.accuracy(X_test_a, y_test_a) << std::endl;
+        std::cout << "Precision on test set a: " << logReg.precision(X_test_a, y_test_a) << std::endl;
+        std::cout << "Recall on test set a: " << logReg.recall(X_test_a, y_test_a) << std::endl;
+        std::cout << "F1 score on test set a: " << logReg.f1_score(X_test_a, y_test_a) << std::endl;
+
+        // Accuracy on the test set b
+        Dataset X_test_b("data/representation.eng.testb.csv");
+        Dataset y_test_b("data/true_labels.eng.testb.csv", true);
+        std::cout << "\nEvaluating the model on the test set b..." << std::endl;
+
+        std::cout << "Accuracy on test set b: " << logReg.accuracy(X_test_b, y_test_b) << std::endl;
+        std::cout << "Precision on test set b: " << logReg.precision(X_test_b, y_test_b) << std::endl;
+        std::cout << "Recall on test set b: " << logReg.recall(X_test_b, y_test_b) << std::endl;
+        std::cout << "F1 score on test set b: " << logReg.f1_score(X_test_b, y_test_b) << std::endl;
+    } 
+    else if (process == "multiclass") 
+    {
+        // Load the dataset
+        Dataset X_train("data/representation.eng.train.csv");
+        Dataset y_train("data/true_labels.eng.train.csv", false, true);
+        
+        // Parameters for logistic regression for multiclass classification
+        double lr = 0.01;
+        long m_epochs = 100;
+
+        // Encode the labels
+        std::vector<std::string> labels = {"I-PER", "O", "I-MISC", "I-LOC" "I-ORG"};
+
+        // Create an instance of MulticlassClassifier and fit the model
+        std::cout << "\nFitting the model..." << std::endl;
+        MulticlassClassifier classifier(&X_train, &y_train, lr, m_epochs, labels);
+        std::cout << "Model fitted.\n" << std::endl;
+
+        // Accuracy on the training set
+        std::cout << "Accuracy on training set: " << classifier.accuracy(X_train, y_train) << std::endl;
+        std::cout << "Precision on training set: " << classifier.precision(X_train, y_train) << std::endl;
+        std::cout << "Recall on training set: " << classifier.recall(X_train, y_train) << std::endl;
+        std::cout << "F1 score on training set: " << classifier.f1_score(X_train, y_train) << std::endl;
+
+        // Accuracy on the test set a
+        std::cout << "\nEvaluating the model on the test set a..." << std::endl;
+        Dataset X_test_a("data/representation.eng.testa.csv");
+        Dataset y_test_a("data/true_labels.eng.testa.csv", false, true);
+
+        std::cout << "Accuracy on test set a: " << classifier.accuracy(X_test_a, y_test_a) << std::endl;
+        std::cout << "Precision on test set a: " << classifier.precision(X_test_a, y_test_a) << std::endl;
+        std::cout << "Recall on test set a: " << classifier.recall(X_test_a, y_test_a) << std::endl;
+        std::cout << "F1 score on test set a: " << classifier.f1_score(X_test_a, y_test_a) << std::endl;
+    } else {
+        cout << "Invalid input !" << endl;
+    }
+    return 0;
+}
+=======
+#include "logistic_regression/LogisticRegression.hpp"
+
+int main() {
+    // Load the dataset
+    Dataset X("/home/mach/Desktop/info432/Data_anonymization/NER_Project/data/representation.eng.train.csv");  // Assuming the CSV is properly formatted for features
+    Dataset y("/home/mach/Desktop/info432/Data_anonymization/NER_Project/data/true_labels.eng.train.csv", true); // Assuming second parameter 'true' signifies loading labels
+    // Parameters for logistic regression
+    double learningRate = 0.01;
+    long epochs = 1000;
+
+    // Create an instance of LogisticRegression
+    LogisticRegression logReg(&X, &y, learningRate, epochs);
+
+    std::cout << "Logistic Regression model created." << std::endl;
+
+
+
+    // // Fit the model
+    // // logReg.set_coefficients();
+
+    // // Display coefficients
+    // // logReg.show_coefficients();
+
+    // // Example of using the model to predict
+    // // Here, we might take a random instance from `X` and estimate the output
+    // const std::vector<double>& instance = X.get_instance(0);  // get the first instance
+    // Eigen::VectorXd vec(instance.size());
+    // for (size_t i = 0; i < instance.size(); ++i) {
+    //     vec(i) = instance[i];
+    // }
+    // double prediction = logReg.estimate(vec);
+    // std::cout << "Predicted value for the first instance: " << prediction << std::endl;
+    // // logistic_regression.show_coefficients();
+
+
+    Dataset data_Xtest("/home/mach/Desktop/info432/Data_anonymization/NER_Project/data/representation.eng.testa.csv");  // Assuming the CSV is properly formatted for features
+    Dataset data_ytest("/home/mach/Desktop/info432/Data_anonymization/NER_Project/data/true_labels.eng.testa.csv", true); // Assuming second parameter 'true' signifies loading labels
+    
+    double acc=logReg.calculate_test_Accuracy(&data_Xtest, &data_ytest);
+
+    std::cout << "Accuracy: " << acc << std::endl;
+
+    return 0;
+}
+>>>>>>> origin/main

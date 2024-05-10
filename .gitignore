@@ -1,0 +1,13 @@
+<<<<<<< HEAD
+main.exe
+.vscode
+build
+data
+data.zip
+useful/Anonymization.html
+=======
+data
+main.exe
+.vscode
+build
+>>>>>>> origin/main
